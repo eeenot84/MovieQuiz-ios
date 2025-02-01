@@ -13,7 +13,7 @@ final class MovieQuizViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        imageView.layer.borderWidth = 8.0
         buttonYes.layer.cornerRadius = 15
         buttonNo.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
@@ -48,14 +48,17 @@ final class MovieQuizViewController: UIViewController {
     ]
 
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        checkAnswer(givenAnswer: true)
+        handleAnswer(givenAnswer: true)
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        checkAnswer(givenAnswer: false)
+        handleAnswer(givenAnswer: false)
     }
 
-    private func checkAnswer(givenAnswer: Bool) {
+    private func handleAnswer(givenAnswer: Bool) {
+        // 🔒 Блокируем кнопки при нажатии
+        setButtonsEnabled(false)
+        
         let currentQuestion = questions[currentQuestionIndex]
         let isCorrect = givenAnswer == currentQuestion.correctAnswer
         
@@ -64,6 +67,11 @@ final class MovieQuizViewController: UIViewController {
         }
         
         showAnswerResult(isCorrect: isCorrect)
+    }
+
+    private func setButtonsEnabled(_ isEnabled: Bool) {
+        buttonYes.isEnabled = isEnabled
+        buttonNo.isEnabled = isEnabled
     }
 
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -81,11 +89,13 @@ final class MovieQuizViewController: UIViewController {
     }
 
     private func showAnswerResult(isCorrect: Bool) {
-        imageView.layer.borderWidth = 8.0
         imageView.layer.borderColor = (isCorrect ? UIColor(named: "YP Green") : UIColor(named: "YP Red"))?.cgColor
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
+            
+            // 🔓 Разблокируем кнопки после загрузки следующего вопроса
+            self.setButtonsEnabled(true)
         }
     }
 
@@ -120,5 +130,8 @@ final class MovieQuizViewController: UIViewController {
         let viewModel = convert(model: firstQuestion)
         show(quiz: viewModel)
         imageView.layer.borderWidth = 0
+        
+        // 🔓 Разблокируем кнопки при старте новой игры
+        setButtonsEnabled(true)
     }
 }
