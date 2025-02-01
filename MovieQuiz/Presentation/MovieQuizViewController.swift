@@ -56,7 +56,7 @@ final class MovieQuizViewController: UIViewController {
     }
 
     private func handleAnswer(givenAnswer: Bool) {
-        // 🔒 Блокируем кнопки при нажатии
+
         setButtonsEnabled(false)
         
         let currentQuestion = questions[currentQuestionIndex]
@@ -86,15 +86,13 @@ final class MovieQuizViewController: UIViewController {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
+        imageView.layer.borderColor = UIColor.clear.cgColor
     }
 
     private func showAnswerResult(isCorrect: Bool) {
         imageView.layer.borderColor = (isCorrect ? UIColor(named: "YP Green") : UIColor(named: "YP Red"))?.cgColor
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
-            
-            // 🔓 Разблокируем кнопки после загрузки следующего вопроса
             self.setButtonsEnabled(true)
         }
     }
@@ -107,7 +105,7 @@ final class MovieQuizViewController: UIViewController {
             let nextQuestion = questions[currentQuestionIndex]
             let viewModel = convert(model: nextQuestion)
             show(quiz: viewModel)
-            imageView.layer.borderWidth = 0
+        
         }
     }
 
@@ -130,8 +128,6 @@ final class MovieQuizViewController: UIViewController {
         let viewModel = convert(model: firstQuestion)
         show(quiz: viewModel)
         imageView.layer.borderWidth = 0
-        
-        // 🔓 Разблокируем кнопки при старте новой игры
         setButtonsEnabled(true)
     }
 }
