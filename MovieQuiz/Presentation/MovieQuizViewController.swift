@@ -120,14 +120,13 @@ final class MovieQuizViewController: UIViewController {
         alert.addAction(action)
         present(alert, animated: true)
     }
-
     private func restartGame() {
         currentQuestionIndex = 0
         correctAnswers = 0
         let firstQuestion = questions[currentQuestionIndex]
         let viewModel = convert(model: firstQuestion)
         show(quiz: viewModel)
-        imageView.layer.borderWidth = 0
+        imageView.layer.borderColor = UIColor.clear.cgColor
         setButtonsEnabled(true)
     }
 }
